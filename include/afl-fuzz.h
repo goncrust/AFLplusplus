@@ -514,11 +514,11 @@ typedef struct afl_env_vars {
       afl_dumb_forksrv, afl_import_first, afl_custom_mutator_only,
       afl_custom_mutator_late_send, afl_no_ui, afl_force_ui,
       afl_i_dont_care_about_missing_crashes, afl_bench_just_one,
-      afl_bench_until_crash, afl_debug_child, afl_autoresume, afl_cal_fast,
-      afl_cycle_schedules, afl_expand_havoc, afl_statsd, afl_cmplog_only_new,
-      afl_exit_on_seed_issues, afl_try_affinity, afl_ignore_problems,
-      afl_keep_timeouts, afl_no_crash_readme, afl_ignore_timeouts,
-      afl_no_startup_calibration, afl_no_warn_instability,
+      afl_bench_until_crash, afl_debug_child, afl_debug_mode, afl_autoresume,
+      afl_cal_fast, afl_cycle_schedules, afl_expand_havoc, afl_statsd,
+      afl_cmplog_only_new, afl_exit_on_seed_issues, afl_try_affinity,
+      afl_ignore_problems, afl_keep_timeouts, afl_no_crash_readme,
+      afl_ignore_timeouts, afl_no_startup_calibration, afl_no_warn_instability,
       afl_post_process_keep_original, afl_crashing_seeds_as_new_crash,
       afl_final_sync, afl_ignore_seed_problems, afl_disable_redundant,
       afl_sha1_filenames, afl_no_sync, afl_no_fastresume, afl_force_fastresume,
@@ -639,6 +639,7 @@ typedef struct afl_state {
   u8 havoc_stack_pow2,                  /* HAVOC_STACK_POW2                 */
       no_unlink,                        /* do not unlink cur_input          */
       debug,                            /* Debug mode                       */
+      debug_mode_code,                  /* AFL_DEBUG_MODE code id           */
       custom_only,                      /* Custom mutator only mode         */
       custom_splice_optout,             /* Custom mutator no splice buffer  */
       is_main_node,                     /* if this is the main node         */

@@ -1526,6 +1526,14 @@ void show_stats_normal(afl_state_t *afl) {
               " %s " bSTG bH2 bRB bSTOP cRST RESET_G1,
        afl->fuzz_mode == 0 ? "explore" : "exploit", get_fuzzing_state(afl));
 
+  if (afl->afl_env.afl_debug_mode) {
+
+    u8  code = afl->debug_mode_code;
+    u8 *code_color = code == 0 ? cRED : cGRN;
+    SAYF("%s" cGRA "[debug: %s%3u" cGRA "]" cRST, SP10, code_color, code);
+
+  }
+
 #undef IB
 
   /* Hallelujah! */
