@@ -353,7 +353,8 @@
 /* Sync time (minimum time between syncing in ms, time is halfed for -M main
    nodes) - default is 20 minutes: */
 
-#define SYNC_TIME (20 * 60 * 1000)
+//#define SYNC_TIME (20 * 60 * 1000)
+#define SYNC_TIME (1 * 60 * 1000) // 30 seconds for main, else 1 min
 
 /* Output directory reuse grace period (minutes): */
 
