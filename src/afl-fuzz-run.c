@@ -1495,9 +1495,16 @@ u8 __attribute__((hot)) common_fuzz_stuff(afl_state_t *afl, u8 *out_buf,
 
     static u32 _cfs_sync_cnt = 0;
     if (unlikely(++_cfs_sync_cnt >= 1000)) {
-
       _cfs_sync_cnt = 0;
+
+      // preserve trace_bits (which is overwitten by sync)
+      u8 *saved_trace = ck_alloc(afl->fsrv.map_size);
+      memcpy(saved_trace, afl->fsrv.trace_bits, afl->fsrv.map_size);
+
       maybe_sync_fuzzers(afl, get_cur_time(), NULL);
+
+      memcpy(afl->fsrv.trace_bits, saved_trace, afl->fsrv.map_size);
+      ck_free(saved_trace);
 
     }
 
