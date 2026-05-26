@@ -67,6 +67,52 @@ development state of AFL++.
 To build AFL++ yourself - *which we recommend* - continue at
 [docs/INSTALL.md](docs/INSTALL.md).
 
+## Building for AVD++ (QEMU mode only)
+
+AVD++ uses AFL++ exclusively in QEMU mode (binary-only fuzzing), so the
+LLVM/GCC compiler-instrumentation pieces can be skipped. Two QEMU builds are
+typically needed: x86_64 for native targets and i386 for 32-bit CGC binaries.
+
+### x86_64 build
+
+```shell
+make binary-only NO_NYX=1 NO_FRIDA=1 NO_UNICORN=1
+mv afl-qemu-trace afl-qemu-trace-x86_64
+```
+
+The `mv` renames the x86_64 trace binary so the i386 build below doesn't overwrite it.
+
+### i386 build (for 32-bit CGC binaries)
+
+The `make` targets don't expose `CPU_TARGET`, so the i386 QEMU needs to be built directly via the script:
+
+```shell
+cd qemu_mode && CPU_TARGET=i386 ./build_qemu_support.sh && cd ..
+mv afl-qemu-trace afl-qemu-trace-i386
+```
+
+### Switching between architectures
+
+`afl-fuzz` always execs `afl-qemu-trace`, so before running copy or symlink the right arch into place:
+
+```shell
+ln -sf afl-qemu-trace-x86_64 afl-qemu-trace    # before fuzzing x86_64 targets
+ln -sf afl-qemu-trace-i386   afl-qemu-trace    # before fuzzing i386 targets
+```
+
+On some i386 targets the forkserver handshake fails because too little
+virtual address space is reserved. The workaround is to export `QEMU_RESERVED_VA=0x1000000`
+before running `afl-fuzz`.
+
+### Pointing AVD++ at this build
+
+If you skipped `sudo make install`, point AVD++ at this:
+
+```shell
+export AVDPP_BENCH_AFL_DIR=/absolute/path/to/AFLplusplus   # for the tests framework
+avdpp <target> -a /absolute/path/to/AFLplusplus            # or pass it inline
+```
+
 ## Quick start: Fuzzing with AFL++
 
 *NOTE: Before you start, please read about the
