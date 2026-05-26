@@ -925,6 +925,8 @@ void sync_fuzzers(afl_state_t *afl) {
   u32            sync_cnt = 0, synced = 0, entries = 0;
   u8             path[PATH_MAX + 1 + NAME_MAX];
 
+  fprintf(stderr, "[SYNC_DEBUG] sync_fuzzers ENTER\n");
+
   sd = opendir(afl->sync_dir);
   if (!sd) { PFATAL("Unable to open '%s'", afl->sync_dir); }
 
@@ -1143,7 +1145,11 @@ void sync_fuzzers(afl_state_t *afl) {
           }
 
           afl->syncing_party = sd_ent->d_name;
-          afl->queued_imported += save_if_interesting(afl, mem, new_len, fault);
+          u8 saved = save_if_interesting(afl, mem, new_len, fault);
+          afl->queued_imported += saved;
+          fprintf(stderr,
+                  "[SYNC_DEBUG] sync seed %s/%s: fault=%u saved=%u\n",
+                  sd_ent->d_name, namelist[o]->d_name, fault, saved);
           show_stats(afl);
           afl->syncing_party = 0;
           munmap(mem, st.st_size);
