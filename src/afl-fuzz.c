@@ -571,10 +571,10 @@ static void fasan_check_afl_preload(char *afl_preload) {
 
 /* Throttle syncs by `sync_time` and `sync_interval_cnt`. Pass NULL for
    sync_interval_cnt to only limit by sync_time. Main node sync time is half of
-   secondary nodes, and a third of SYNC_INTERVAL
+   secondary nodes, and a third of SYNC_INTERVAL.
  */
-static void maybe_sync_fuzzers(afl_state_t *afl, u64 cur_time,
-                               u32 *sync_interval_cnt) {
+void maybe_sync_fuzzers(afl_state_t *afl, u64 cur_time,
+                        u32 *sync_interval_cnt) {
 
   u64 sync_time = afl->is_main_node ? afl->sync_time >> 1 : afl->sync_time;
 

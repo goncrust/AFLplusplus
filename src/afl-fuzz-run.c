@@ -1487,6 +1487,22 @@ u8 __attribute__((hot)) common_fuzz_stuff(afl_state_t *afl, u8 *out_buf,
 
   if (afl->stop_soon) { return 1; }
 
+  /* fuzz_one() can take control of execution for several minutes on slow
+     targets, which blocks all syncs. Interleave a sync attempt here every
+     N execs. maybe_sync_fuzzers itself enforces the time gate so we don't
+     actually sync that often. */
+  if (afl->sync_id) {
+
+    static u32 _cfs_sync_cnt = 0;
+    if (unlikely(++_cfs_sync_cnt >= 1000)) {
+
+      _cfs_sync_cnt = 0;
+      maybe_sync_fuzzers(afl, get_cur_time(), NULL);
+
+    }
+
+  }
+
   if (fault == FSRV_RUN_TMOUT) {
 
     if (afl->subseq_tmouts++ > TMOUT_LIMIT) {

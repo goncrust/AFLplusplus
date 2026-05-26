@@ -1363,6 +1363,7 @@ int  statsd_format_metric(afl_state_t *afl, char *buff, size_t bufflen);
 
 void check_sync_fuzzers(afl_state_t *);
 void sync_fuzzers(afl_state_t *);
+void maybe_sync_fuzzers(afl_state_t *, u64, u32 *);
 u32  write_to_testcase(afl_state_t *, void **, u32, u32);
 u8   calibrate_case(afl_state_t *, struct queue_entry *, u8 *, u32, u8);
 u8   trim_case(afl_state_t *, struct queue_entry *, u8 *);
